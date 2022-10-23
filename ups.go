@@ -2,9 +2,9 @@ package nut
 
 import (
 	"fmt"
+	"regexp"
 	"strconv"
 	"strings"
-	"regexp"
 )
 
 // UPS contains information about a specific UPS provided by the NUT instance.
@@ -81,7 +81,7 @@ func (u *UPS) GetNumberOfLogins() (int, error) {
 
 // GetClients returns a list of NUT clients.
 func (u *UPS) GetClients() ([]string, error) {
-	clientsList := []string{}
+	var clientsList []string
 	resp, err := u.nutClient.SendCommand(fmt.Sprintf("LIST CLIENT %s", u.Name))
 	if err != nil {
 		return clientsList, err
@@ -120,7 +120,7 @@ func (u *UPS) GetDescription() (string, error) {
 
 // GetVariables returns a slice of Variable structs for the UPS.
 func (u *UPS) GetVariables() ([]Variable, error) {
-	vars := []Variable{}
+	var vars []Variable
 	resp, err := u.nutClient.SendCommand(fmt.Sprintf("LIST VAR %s", u.Name))
 	if err != nil {
 		return vars, err
@@ -156,7 +156,7 @@ func (u *UPS) GetVariables() ([]Variable, error) {
 			newVar.Type = "BOOLEAN"
 		}
 
-		matched, _ := regexp.MatchString(`^-?[0-9\.]+$`, splitLine[1])
+		matched, _ := regexp.MatchString(`^-?[0-9]+$`, splitLine[1])
 		if matched {
 			if strings.Count(splitLine[1], ".") == 1 {
 				converted, err := strconv.ParseFloat(splitLine[1], 64)
@@ -207,7 +207,7 @@ func (u *UPS) GetVariableType(variableName string) (string, bool, int, error) {
 	}
 	trimmedLine := strings.TrimPrefix(resp[0], fmt.Sprintf("TYPE %s %s ", u.Name, variableName))
 	splitLine := strings.Split(trimmedLine, " ")
-	writeable := (splitLine[0] == "RW")
+	writeable := splitLine[0] == "RW"
 	varType := "UNKNOWN"
 	maximumLength := 0
 	if writeable {
@@ -228,7 +228,7 @@ func (u *UPS) GetVariableType(variableName string) (string, bool, int, error) {
 
 // GetCommands returns a slice of Command structs for the UPS.
 func (u *UPS) GetCommands() ([]Command, error) {
-	commandsList := []Command{}
+	var commandsList []Command
 	resp, err := u.nutClient.SendCommand(fmt.Sprintf("LIST CMD %s", u.Name))
 	if err != nil {
 		return commandsList, err
