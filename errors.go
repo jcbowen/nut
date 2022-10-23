@@ -6,53 +6,53 @@ import "errors"
 func errorForMessage(message string) (err error) {
 	switch message {
 	case "ACCESS-DENIED":
-		err = errors.New("The client’s host and/or authentication details (username, password) are not sufficient to execute the requested command")
+		err = errors.New("客户端的主机和或身份验证详细信息（用户名、密码）不足以执行请求的命令。")
 	case "UNKNOWN-UPS":
-		err = errors.New("The UPS specified in the request is not known to upsd. This usually means that it didn’t match anything in ups.conf")
+		err = errors.New("请求中指定的UPS未知。这通常意味着它与ups.conf中的任何内容都不匹配")
 	case "VAR-NOT-SUPPORTED":
-		err = errors.New("The specified UPS doesn’t support the variable in the request. This is also sent for unrecognized variables which are in a space which is handled by upsd, such as server.*")
+		err = errors.New("指定的UPS不支持请求中的变量。对于upsd（如服务器）处理的空间中的未识别变量，也会发送此消息。")
 	case "CMD-NOT-SUPPORTED":
-		err = errors.New("The specified UPS doesn’t support the instant command in the request")
+		err = errors.New("指定的UPS不支持请求中的即时命令")
 	case "INVALID-ARGUMENT":
-		err = errors.New("The client sent an argument to a command which is not recognized or is otherwise invalid in this context. This is typically caused by sending a valid command like GET with an invalid subcommand")
+		err = errors.New("客户端向命令发送了一个参数，该参数在该上下文中无法识别或无效。这通常是由于使用无效子命令发送有效命令（如GET）导致的")
 	case "INSTCMD-FAILED":
-		err = errors.New("upsd failed to deliver the instant command request to the driver. No further information is available to the client. This typically indicates a dead or broken driver")
+		err = errors.New("upsd无法将即时命令请求传递给驱动程序。客户无法获得更多信息。这通常表示驾驶员死亡或受伤")
 	case "SET-FAILED":
-		err = errors.New("upsd failed to deliver the set request to the driver. This is just like INSTCMD-FAILED above")
+		err = errors.New("upsd无法将设置请求传递给驱动程序。这就像上面的INSTCMD-FAILED")
 	case "READONLY":
-		err = errors.New("The requested variable in a SET command is not writable")
+		err = errors.New("SET命令中请求的变量不可写")
 	case "TOO-LONG":
-		err = errors.New("The requested value in a SET command is too long")
+		err = errors.New("SET命令中请求的值太长")
 	case "FEATURE-NOT-SUPPORTED":
-		err = errors.New("This instance of upsd does not support the requested feature. This is only used for TLS/SSL mode (STARTTLS) at the moment")
+		err = errors.New("upsd的此实例不支持请求的功能。这目前仅用于TLS/SSL模式（STARTTLS）")
 	case "FEATURE-NOT-CONFIGURED":
-		err = errors.New("This instance of upsd hasn’t been configured properly to allow the requested feature to operate. This is also limited to STARTTLS for now")
+		err = errors.New("upsd的此实例未正确配置以允许请求的功能运行。目前这也仅限于STARTTLS")
 	case "ALREADY-SSL-MODE":
-		err = errors.New("TLS/SSL mode is already enabled on this connection, so upsd can’t start it again")
+		err = errors.New("此连接上已启用TLS/SSL模式，因此upsd无法再次启动")
 	case "DRIVER-NOT-CONNECTED":
-		err = errors.New("upsd can’t perform the requested command, since the driver for that UPS is not connected. This usually means that the driver is not running, or if it is, the ups.conf is misconfigured")
+		err = errors.New("upsd无法执行请求的命令，因为该UPS的驱动程序未连接。这通常意味着驾驶员没有在运行，如果是，则是ups.conf配置错误")
 	case "DATA-STALE":
-		err = errors.New("upsd is connected to the driver for the UPS, but that driver isn’t providing regular updates or has specifically marked the data as stale. upsd refuses to provide variables on stale units to avoid false readings. This generally means that the driver is running, but it has lost communications with the hardware. Check the physical connection to the equipment")
+		err = errors.New("upsd已连接到UPS的驱动程序，但该驱动程序未提供定期更新或已将数据明确标记为过时。upsd拒绝提供过时单位的变量，以避免错误读数。这通常意味着驱动程序正在运行，但它与硬件失去了通信。检查设备的物理连接")
 	case "ALREADY-LOGGED-IN":
-		err = errors.New("The client already sent LOGIN for a UPS and can’t do it again. There is presently a limit of one LOGIN record per connection")
+		err = errors.New("客户端已发送了UPS的登录信息，无法再次发送。目前，每个连接只能有一条登录记录")
 	case "INVALID-PASSWORD":
-		err = errors.New("The client sent an invalid PASSWORD - perhaps an empty one")
+		err = errors.New("客户端发送了无效的密码-可能是空密码")
 	case "ALREADY-SET-PASSWORD":
-		err = errors.New("The client already set a PASSWORD and can’t set another. This also should never happen with normal NUT clients")
+		err = errors.New("客户端已设置密码，无法设置另一个密码。正常的NUT客户端也不应出现这种情况")
 	case "INVALID-USERNAME":
-		err = errors.New("The client sent an invalid USERNAME")
+		err = errors.New("客户端发送了无效的USERNAME")
 	case "ALREADY-SET-USERNAME":
-		err = errors.New("The client has already set a USERNAME, and can’t set another. This should never happen with normal NUT clients")
+		err = errors.New("客户端已经设置了USERNAME，无法再设置一个。正常的NUT客户端不应出现这种情况")
 	case "USERNAME-REQUIRED":
-		err = errors.New("The requested command requires a username for authentication, but the client hasn’t set one")
+		err = errors.New("请求的命令需要用户名进行身份验证，但客户端尚未设置用户名")
 	case "PASSWORD-REQUIRED":
-		err = errors.New("The requested command requires a passname for authentication, but the client hasn’t set one")
+		err = errors.New("请求的命令需要一个用于身份验证的密码，但客户端尚未设置")
 	case "UNKNOWN-COMMAND":
-		err = errors.New("upsd doesn’t recognize the requested command")
+		err = errors.New("upsd无法识别请求的命令")
 	case "INVALID-VALUE":
-		err = errors.New("The value specified in the request is not valid. This usually applies to a SET of an ENUM type which is using a value which is not in the list of allowed values")
+		err = errors.New("请求中指定的值无效。这通常适用于ENUM类型的SET，该SET使用的值不在允许值列表中")
 	default:
-		err = errors.New("Unknown error code")
+		err = errors.New("未知的错误码")
 	}
 
 	return err
