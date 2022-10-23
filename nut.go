@@ -36,8 +36,14 @@ func Connect(hostname string, _port ...int) (Client, error) {
 		Hostname: conn.RemoteAddr(),
 		conn:     conn,
 	}
-	client.GetVersion()
-	client.GetNetworkProtocolVersion()
+	_, err = client.GetVersion()
+	if err != nil {
+		return client, err
+	}
+	_, err = client.GetNetworkProtocolVersion()
+	if err != nil {
+		return client, err
+	}
 	return client, nil
 }
 
@@ -56,7 +62,7 @@ func (c *Client) Disconnect() (bool, error) {
 // ReadResponse is a convenience function for reading newline delimited responses.
 func (c *Client) ReadResponse(endLine string, multiLineResponse bool) (resp []string, err error) {
 	connbuff := bufio.NewReader(c.conn)
-	response := []string{}
+	var response []string
 
 	for {
 		line, err := connbuff.ReadString('\n')
@@ -118,7 +124,7 @@ func (c *Client) Authenticate(username, password string) (bool, error) {
 
 // GetUPSList returns a list of all UPSes provided by this NUT instance.
 func (c *Client) GetUPSList() ([]UPS, error) {
-	upsList := []UPS{}
+	var upsList []UPS
 	resp, err := c.SendCommand("LIST UPS")
 	if err != nil {
 		return upsList, err
